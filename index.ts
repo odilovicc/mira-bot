@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
-import { MiraBot } from './modules/telegram';
-import { Ollama } from './modules/ollama';
+import { MiraBot } from './src/modules/telegram';
+import { Ollama } from './src/modules/ollama';
 
 // Load environment variables from .env file
 dotenv.config();
@@ -12,8 +12,8 @@ async function boot() {
         // Initialize Ollama service
         await Ollama.initOllama();
         
-        // Initialize and start Telegram bot
-        await MiraBot.initBot();
+        // Initialize Telegram bot
+        await MiraBot.bot();
         
         console.log("Bot is running successfully!");
     } catch (error) {
