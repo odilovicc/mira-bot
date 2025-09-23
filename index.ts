@@ -1,25 +1,33 @@
-import dotenv from 'dotenv';
-import { MiraBot } from './src/modules/telegram';
-import { Ollama } from './src/modules/ollama';
+import { Application } from './src/Application';
+import { logger } from './src/utils/logger';
 
-// Load environment variables from .env file
-dotenv.config();
+async function main() {
+  const app = new Application();
 
-async function boot() {
-    console.log("Starting up Telegram bot...");
-
+  // Graceful shutdown handling
+  const shutdown = async (signal: string) => {
+    logger.info({ signal }, 'Received shutdown signal');
     try {
-        // Initialize Ollama service
-        await Ollama.initOllama();
-        
-        // Initialize Telegram bot
-        await MiraBot.bot();
-        
-        console.log("Bot is running successfully!");
+      await app.stop();
+      process.exit(0);
     } catch (error) {
-        console.error("Failed to start bot:", error);
-        process.exit(1);
+      logger.error({ error }, 'Error during shutdown');
+      process.exit(1);
     }
+  };
+
+  process.on('SIGTERM', () => shutdown('SIGTERM'));
+  process.on('SIGINT', () => shutdown('SIGINT'));
+
+  try {
+    await app.start();
+  } catch (error) {
+    logger.error({ error }, 'Failed to start application');
+    process.exit(1);
+  }
 }
 
-boot()
+main().catch((error) => {
+  console.error('Unhandled error:', error);
+  process.exit(1);
+});

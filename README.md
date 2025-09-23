@@ -56,20 +56,39 @@ yarn start
 ## Project Structure
 
 ```
-├── index.ts                 # Main entry point
-├── modules/
-│   ├── telegram.ts         # Telegram bot initialization
-│   └── ollama.ts           # Ollama AI integration
-├── scripts/
-│   └── answerQuestion.ts   # Question answering logic
+├── index.ts                           # Main entry point
+├── src/
+│   ├── Application.ts                 # Main application with DI
+│   ├── config/
+│   │   └── index.ts                   # Environment validation with Zod
+│   ├── transport/
+│   │   └── telegram/
+│   │       └── TelegramTransport.ts   # Telegram bot implementation
+│   ├── integrations/
+│   │   └── ollama/
+│   │       └── OllamaClient.ts        # Ollama AI client
+│   ├── domain/
+│   │   ├── models/
+│   │   │   └── index.ts               # Domain models (Question, Answer, etc.)
+│   │   └── services/
+│   │       └── index.ts               # Service interfaces
+│   ├── application/
+│   │   └── usecases/
+│   │       └── HandleQuestionUseCase.ts  # Business logic
+│   └── utils/
+│       └── logger.ts                  # Structured logging with Pino
 ├── package.json
 ├── tsconfig.json
-└── .env                    # Environment variables (not in repo)
+└── .env                               # Environment variables (not in repo)
 ```
 
 ## Environment Variables
 
 - `TELEGRAM_BOT_TOKEN` - Your Telegram bot token from @BotFather
+- `OLLAMA_HOST` - Ollama server URL (default: http://localhost:11434)
+- `OLLAMA_MODEL` - AI model to use (default: mistral)
+- `NODE_ENV` - Environment (development/production/test)
+- `LOG_LEVEL` - Logging level (debug/info/warn/error)
 
 ## Contributing
 
